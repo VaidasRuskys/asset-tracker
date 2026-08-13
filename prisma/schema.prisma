@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum AssetType {
+  STOCK
+  CRYPTO
+  CASH
+}
+
+enum PriceSource {
+  YAHOO
+  COINGECKO
+  MANUAL
+}
+
+model Asset {
+  id        String    @id @default(cuid())
+  type      AssetType
+  symbol    String
+  name      String
+  currency  String
+  createdAt DateTime  @default(now())
+
+  holdings      Holding[]
+  priceHistory  PriceHistory[]
+
+  @@unique([type, symbol])
+}
+
+model Holding {
+  id          String   @id @default(cuid())
+  assetId     String
+  accountName String
+  quantity    Float
+  createdAt   DateTime @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+}
+
+model PriceHistory {
+  id       String      @id @default(cuid())
+  assetId  String
+  date     DateTime
+  price    Float
+  currency String
+  source   PriceSource
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, date])
+}
+
+model BankBalance {
+  id          String   @id @default(cuid())
+  accountName String
+  currency    String
+  balance     Float
+  recordedAt  DateTime @default(now())
+
+  @@index([accountName])
+}
