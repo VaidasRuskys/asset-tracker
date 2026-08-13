@@ -23,7 +23,7 @@ export default async function AssetsPage() {
           <input
             name="symbol"
             required
-            placeholder="AAPL / bitcoin"
+            placeholder="AAPL / BTC"
             className="border rounded-md px-2 py-1.5 border-black/10 dark:border-white/20 bg-transparent"
           />
         </label>
@@ -55,7 +55,8 @@ export default async function AssetsPage() {
 
       <p className="text-xs opacity-60 -mt-4">
         Stock symbols are Yahoo Finance tickers (e.g. <code>AAPL</code>, <code>VWCE.DE</code>);
-        crypto symbols are CoinGecko coin ids (e.g. <code>bitcoin</code>).
+        crypto accepts a ticker (e.g. <code>BTC</code>) or a CoinGecko coin id (e.g.{" "}
+        <code>bitcoin</code>) — tickers are resolved to the coin id automatically.
       </p>
 
       <table className="w-full text-sm">
