@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { fetchPrice } from "@/lib/providers";
+import { startOfDay } from "./dateUtils";
 
 export interface PriceFetchResult {
   symbol: string;
@@ -54,8 +55,4 @@ export async function runPriceFetchJob(): Promise<PriceFetchResult[]> {
   }
 
   return results;
-}
-
-function startOfDay(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 }

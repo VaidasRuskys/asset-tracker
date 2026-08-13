@@ -9,4 +9,5 @@ export interface PriceQuote {
 export interface PriceProvider {
   source: PriceSource;
   fetchPrice(symbol: string): Promise<PriceQuote>;
+  fetchHistory(symbol: string, from: Date, to: Date): Promise<PriceQuote[]>;
 }

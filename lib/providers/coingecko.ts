@@ -41,4 +41,25 @@ export const coingeckoProvider: PriceProvider = {
     }
     return { price, currency: "USD", date: new Date() };
   },
+  async fetchHistory(symbol: string, from: Date, to: Date): Promise<PriceQuote[]> {
+    const url =
+      `${BASE_URL}/coins/${encodeURIComponent(symbol)}/market_chart/range` +
+      `?vs_currency=usd&from=${Math.floor(from.getTime() / 1000)}&to=${Math.floor(to.getTime() / 1000)}`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`CoinGecko history request failed for ${symbol}: ${res.status}`);
+    }
+    const data = await res.json();
+    const prices: Array<[number, number]> = data.prices ?? [];
+
+    // CoinGecko returns hourly/5-min granularity for short ranges — collapse
+    // to one point per calendar day by keeping the last price seen that day.
+    const byDay = new Map<string, PriceQuote>();
+    for (const [ms, price] of prices) {
+      const date = new Date(ms);
+      const dayKey = date.toISOString().slice(0, 10);
+      byDay.set(dayKey, { price, currency: "USD", date });
+    }
+    return [...byDay.values()];
+  },
 };

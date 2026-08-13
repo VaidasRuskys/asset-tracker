@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createAsset, deleteAsset } from "./actions";
+import HistoryFetchButton from "./HistoryFetchButton";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +67,7 @@ export default async function AssetsPage() {
             <th className="py-2">Symbol</th>
             <th className="py-2">Name</th>
             <th className="py-2">Currency</th>
+            <th className="py-2">History</th>
             <th className="py-2" />
           </tr>
         </thead>
@@ -76,6 +78,9 @@ export default async function AssetsPage() {
               <td className="py-2">{asset.symbol}</td>
               <td className="py-2">{asset.name}</td>
               <td className="py-2">{asset.currency}</td>
+              <td className="py-2">
+                <HistoryFetchButton assetId={asset.id} />
+              </td>
               <td className="py-2 text-right">
                 <form action={deleteAsset}>
                   <input type="hidden" name="id" value={asset.id} />

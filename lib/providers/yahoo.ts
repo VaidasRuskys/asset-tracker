@@ -17,4 +17,11 @@ export const yahooProvider: PriceProvider = {
       date: new Date(),
     };
   },
+  async fetchHistory(symbol: string, from: Date, to: Date): Promise<PriceQuote[]> {
+    const result = await yahooFinance.chart(symbol, { period1: from, period2: to, interval: "1d" });
+    const currency = result.meta.currency ?? "USD";
+    return result.quotes
+      .filter((q) => typeof q.close === "number")
+      .map((q) => ({ price: q.close as number, currency, date: q.date }));
+  },
 };
